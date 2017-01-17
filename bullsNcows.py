@@ -50,8 +50,26 @@ def count_bulls_and_cows(guess, target):
     return (bulls, cows)
 
 
+def evaluate_score(loops, total_cows):
+    if loops == 0 and total_cows == 0:
+        print("Congratulations. You guessed the number at first try!")
+        print("Good luck maintaining your herd with no cows...")
+    elif loops > 0 and loops <= 2 and total_cows < 3:
+        print("Very good, you could use more cows though.")
+    elif loops > 3 and loops <= 7 and total_cows <= 16:
+        print("Impressive, just enough cows in less then five guesses.")
+    elif loops > 3 and loops <= 7:
+        print("Impressive. Quite a herd.")
+    elif loops > 8:
+        print("Nice guess. You were lucky.")
+    elif loops > 16:
+        print("You could do better.")
+    else:
+        print("Your performance needs no comments.")
+
+
 def the_game(bull_population):
-    loops = 0
+    loops = 1
     total_cows = 0
     print_intro(bull_population)
     the_number = create_number(bull_population)
@@ -63,6 +81,7 @@ def the_game(bull_population):
             print("Correct, you got all the {0} bulls! It took you {1} guesses.\
  You also have {2} cows."
                   .format(bull_population, loops, total_cows))
+            evaluate_score(loops, total_cows)
             exit(0)
         else:
             loops += 1
