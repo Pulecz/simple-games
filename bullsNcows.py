@@ -77,7 +77,6 @@ def the_game(bull_population):
     total_cows = 0
     print_intro(bull_population)
     the_number = create_number(bull_population)
-    print(the_number)
     while True:
         player_guess = ask_user(bull_population)
         bulls, cows = count_bulls_and_cows(player_guess, the_number)
