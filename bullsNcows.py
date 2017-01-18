@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-bull_population = 4
-
+#works only with python3
 from random import randint
 
 
@@ -15,10 +14,11 @@ def create_number(bulls):
 def print_intro(bulls):
     print("Welcome, let's play a game where you have to guess a number.\n"
           "People call it bulls and cows.\n"
-          "You will have a chance to win {0} bulls, which you will get for "
-          "each correctly guessed number.\n"
-          "For each incorrect guess you will get a cow. And you will sure need "
-          "those to get sucessfull.\n".format(bulls))
+          "You have a chance to win {0} bulls, which you can get for "
+          "guessing all numbers.\n"
+          "For each incorrect guess you will get a cow.\n"
+          "And you will sure need those to get successful herd.\n".
+          format(bulls))
 
 
 def ask_user(bulls):
@@ -82,15 +82,22 @@ def the_game(bull_population):
         bulls, cows = count_bulls_and_cows(player_guess, the_number)
         if bulls == bull_population:
             total_cows += cows
-            print("Correct, you got all the {0} bulls! It took you {1} "
-                  "guesses. Finally the bulls stay with the {2} cows "
-                  "you collected.".format(bull_population, loops, total_cows))
+            print("Correct, you got all the {0} bulls! It took you {1} guesses."
+                  "\nFinally the bulls stay with the {2} cows you collected."
+                  .format(bull_population, loops, total_cows))
             evaluate_score(loops, total_cows)
             exit(0)
         else:
             loops += 1
             total_cows += cows
-            print("You got {0} bulls and {1} cows. Bulls ran away..."
-                  .format(bulls, cows))
+            if bulls == 0:
+                print("You got {0} bulls, but at least you got {1} cows."
+                      .format(bulls, cows))
+            else:
+                print("You got {0} bulls and {1} cows. "
+                      "Bulls ran back to old herd.".format(bulls, cows))
 
-the_game(bull_population)
+if __name__ == "__main__":
+    bull_population = 4
+    the_game(bull_population)
+    
