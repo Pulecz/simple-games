@@ -1,54 +1,90 @@
 #!/usr/bin/env python
-
-import random
+"""
+Generate random number from 1 to max_number
+Ask user for input
+    validate if its a number (floats are ignored)
+Compare generated number with user_input
+"""
+import random #for randint
+from string import digits as numbers_for_humans #for showing user what strings are allowed
 
 #settings
-max_number=10
-guesses = 3
-debug=False
+debug = False
+max_number = 9
+max_available_guesses = 3
 
-def guess_number(guesses = 3, debug = False):
-    "main game logic"
-
-    def handle_input():
-        "return only int and number in bounds"
-        user_input = input('Guess a number from 0 to ' + str(max_number) + ':\n')
-        try:
-            int(user_input)
-        except ValueError:
-            print('Please insert by only a number\nTry again')
-            handle_input()
-        #can convert to int, now save the variable
-        users_number = int(user_input)
-        if users_number < 0 or users_number > max_number:
-            print('Number', users_number, 'is out of bounds\nTry again')
-            handle_input()
-        else:
-            return users_number
-
-    def evaluate(target, users_guess, guesses):
-        'evaluate if user is correct'
-        if users_guess == target:
-            print('You got it!')
-            return True
-        else:
-            if guesses != 1: #has to be, so 3 guesses are really 3, not 4
-                print('Wrong, try again')
-                guesses -= 1
-                users_guess = handle_input()
-                evaluate(target, users_guess, guesses)
-            else:
-                print('Out of tries, you lost')
-                return False
-
-
-    #generate number
-    target = random.randint(0,max_number)
-    if debug: print(target)
-    #take input
-    users_guess = handle_input()
-    #let user guess until guesses run out
-    evaluate(target, users_guess, guesses)
+def compare(user_input):
+    """simply compare if the user_input is same value as target_number
+    return True if values are equal, otherwise False
+    """
+    #target_number is global var
+    if target_number == user_input:
+        print('You guessed it!')
+        return True
+    else:
+        print('Incorrect.')
+        return False
 
 if __name__ == '__main__':
-    guess_number(guesses = guesses, debug=debug)
+    #working global var
+    guesses = 0
+
+    def ask_for_digit(limit=99):
+        """Ask user for a whole number(int) and follow these rules:
+           * positive int (using isdigit func) - note that any input with prefix '-' is not taken as a digit
+           * no higher then max_number
+        default limit is 99 KeyboardInterrupt handled
+
+        only outcome is:
+            * return of int following the rules
+            * KeyboardInterrupt causing exit()
+        '"""
+
+        global guesses
+        print('{} guesses left'.format(max_available_guesses - guesses))
+
+        for chance in range(limit):
+            #do input
+            try:
+                user_input = input('Guess a number from 1 to {}: '.format(max_number))
+            except KeyboardInterrupt:
+                print('Giving up? Boo')
+                exit(1001)
+
+            #got input in user_input which is str
+            #if its a digit (hence no str) set repeat o
+            ##if user_input.isdigit() and int(user_input) <= max_number:
+            if user_input.isdigit(): #first condition
+                if int(user_input) > max_number:
+                    print('Please input number from 1 to 9')
+                elif int(user_input) <= max_number: #second condition
+                    break
+
+            if chance >= 4: #if its already 5th wasted chance, print help
+                print('Come on enter some number already!\nNumber is these characters {}'.format(
+                    ' or '.join(n for n in numbers_for_humans))) #convert string to a list then list to a string
+
+        user_input = int(user_input)
+        guesses += 1
+        return user_input
+
+    #generate number
+    target_number = random.randint(1, max_number)
+    #if debug is on (True) show what the target_number is
+    if debug: print(target_number)
+
+    #game loop
+    while True: #while user can make guess(es)
+        user_input = ask_for_digit() #input is in this function, that is the 'pause' in while loop
+        if compare(user_input):
+            #user won, exit
+            exit(0) #win
+        else:
+            #user didn't get it, ask for new input again
+            pass
+        #check if guesses are exhausted
+        if guesses == max_available_guesses:
+            #all guesses exhausted
+            print('The target number was', target_number,'\nBetter luck next time!')
+            exit(1) #lose
+

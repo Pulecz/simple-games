@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #simple calculcation done for Stellaris key contest among friends
 #optimistic_const was question about number from 1 to 5
 #quiz score from 0-100 here https://www.space.com/17791-milky-way-galaxy-quiz-trivia.html
